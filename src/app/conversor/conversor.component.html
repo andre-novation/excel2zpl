@@ -1,0 +1,91 @@
+<section class="container">
+  <div class="input">
+    <p-fileupload
+      id="file"
+      name="file"
+      mode="basic"
+      accept=".xls,.xlsx"
+      chooseIcon="pi pi-upload"
+      maxFileSize="1000000"
+      chooseLabel="Browse"
+      (onSelect)="insertExcell($event)"
+      severity="contrast"
+    />
+  </div>
+
+  @if (this.form.value.zpl) {
+
+  <div class="cards grid">
+    <p-card>
+      <ng-template #header>
+        <div class="card-header">
+          <h3>ZPL</h3>
+          <p-button
+            icon="pi pi-copy"
+            (click)="copyToClipboard()"
+            label="Copy"
+            severity="contrast"
+          />
+        </div>
+      </ng-template>
+
+      <div class="pannel">
+        <pre> {{ this.form.value.zpl }} </pre>
+      </div>
+    </p-card>
+
+    <p-card>
+      <div class="card">
+        <form [formGroup]="form">
+          <p-fluid class="card flex flex-wrap gap-4">
+            <p-inputgroup>
+              <p-floatlabel variant="in">
+                <p-select
+                  inputId="density"
+                  formControlName="density"
+                  [options]="densityOptions"
+                  required="true"
+                />
+                <label for="density"> Print Density </label>
+              </p-floatlabel>
+
+              <p-floatlabel variant="in">
+                <p-inputnumber
+                  suffix="mm"
+                  class="input"
+                  inputId="width"
+                  formControlName="width"
+                />
+                <label for="width"> Width </label>
+              </p-floatlabel>
+
+              <p-floatlabel variant="in">
+                <p-inputnumber
+                  suffix="mm"
+                  class="input"
+                  inputId="height"
+                  formControlName="height"
+                />
+                <label for="height"> Height </label>
+              </p-floatlabel>
+            </p-inputgroup>
+
+            <p-button label="Preview" (click)="getLabelPreview()" />
+          </p-fluid>
+        </form>
+
+        @if (this.previewImage) {
+        <div class="label-preview">
+          <p-image
+            [src]="previewImage"
+            alt="Image"
+            [width]="widthImage"
+            [height]="heightImage"
+          />
+        </div>
+        }
+      </div>
+    </p-card>
+  </div>
+  }
+</section>
