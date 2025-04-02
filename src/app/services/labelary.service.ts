@@ -40,7 +40,6 @@ export class LabelaryService {
     // const result = `${this.baseUrl}/${opt.density}/labels/${widthInches}x${heightInches}/${opt.index}/${opt.zpl}/`;
 
     const result = `${this.baseUrl}/${opt.density}/labels/${widthInches}x${heightInches}/${opt.index}/`;
-    console.log(result);
 
     return result;
   };

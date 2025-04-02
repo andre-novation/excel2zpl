@@ -1,13 +1,13 @@
 import { TestBed } from '@angular/core/testing';
 
-import { ZplService } from './zpl.service';
+import { ExcelService } from '../excel.service';
 
-describe('ZplService', () => {
-  let service: ZplService;
+describe('ExcelService', () => {
+  let service: ExcelService;
 
   beforeEach(() => {
     TestBed.configureTestingModule({});
-    service = TestBed.inject(ZplService);
+    service = TestBed.inject(ExcelService);
   });
 
   it('should be created', () => {

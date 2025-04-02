@@ -1,3 +1,4 @@
+import { MessageService } from 'primeng/api';
 import { LabelaryService, labelOptions } from './../services/labelary.service';
 import { Component, inject } from '@angular/core';
 import { switchMap, take } from 'rxjs';
@@ -19,6 +20,8 @@ import { InputGroupModule } from 'primeng/inputgroup';
 import { Fluid } from 'primeng/fluid';
 import { FloatLabelModule } from 'primeng/floatlabel';
 import { ImageModule } from 'primeng/image';
+import { Toast } from 'primeng/toast';
+import { NotificationService } from '../services/notification.service';
 
 @Component({
   selector: 'app-conversor',
@@ -34,11 +37,13 @@ import { ImageModule } from 'primeng/image';
     Fluid,
     FloatLabelModule,
     ImageModule,
+    Toast,
   ],
   templateUrl: './conversor.component.html',
   styleUrl: './conversor.component.scss',
 })
 export class ConversorComponent {
+  private readonly notification = inject(NotificationService);
   private readonly excelService = inject(ExcelService);
   private readonly zplService = inject(ZplService);
   private readonly labelary = inject(LabelaryService);
@@ -65,7 +70,6 @@ export class ConversorComponent {
   }
 
   insertExcell(file: any) {
-    console.log('test');
     this.excelService
       .read(file.files[0])
       .pipe(
@@ -73,8 +77,14 @@ export class ConversorComponent {
         switchMap((res: any) => this.zplService.getZpl(res))
       )
       .subscribe({
-        next: (res: any) => this.form.patchValue({ zpl: res }),
-        error: (error) => console.log('Subscription error:', error),
+        next: (res: any) => {
+          this.notification.showSuccess('ZPL generated!');
+          this.form.patchValue({ zpl: res });
+        },
+        error: (error) => {
+          console.error('Subscription error:', error);
+          this.notification.showError(error);
+        },
       });
   }
 
@@ -90,7 +100,6 @@ export class ConversorComponent {
       .pipe(take(1))
       .subscribe({
         next: (res: any) => {
-          console.log(res);
           const reader = new FileReader();
           reader.onload = () => {
             this.widthImage = (opt.width * 5).toFixed(2);
@@ -98,8 +107,13 @@ export class ConversorComponent {
             this.previewImage = reader.result as string;
           };
           reader.readAsDataURL(res);
+          this.notification.clear();
+          this.notification.showSuccess(`Preview label ${opt.index}!`);
         },
-        error: (error) => console.log('Subscription error:', error),
+        error: (error) => {
+          console.error('Subscription error:', error);
+          this.notification.showError(error);
+        },
       });
   }
 
@@ -107,10 +121,14 @@ export class ConversorComponent {
     if (this.form.value.zpl) {
       navigator.clipboard
         .writeText(this.form.value.zpl)
-        .then(() => alert('Content copied to clipboard!'))
-        .catch((err) => console.error('Failed to copy to clipboard: ', err));
+        .then(() => this.notification.showSuccess('Copied'))
+        .catch((err) => this.notification.showError('Failed to copy'));
     } else {
-      alert('Nothing to copy!');
+      this.notification.showInfo('Nothing to copy!');
     }
+  }
+
+  onIndexChange(e: any) {
+    this.getLabelPreview();
   }
 }
