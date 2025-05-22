@@ -58,6 +58,8 @@ export class ConversorComponent {
 
   form!: FormGroup;
 
+  maxLabels: number = 0;
+
   ngOnInit() {
     this.form = this.fb.group({
       density: ['12dpmm', Validators.required],
@@ -74,10 +76,14 @@ export class ConversorComponent {
       .read(file.files[0])
       .pipe(
         take(1),
-        switchMap((res: any) => this.zplService.getZpl(res))
+        switchMap((res: any) => {
+          this.maxLabels = Array.isArray(res) ? res.length : 0;
+          return this.zplService.getZpl(res);
+        })
       )
       .subscribe({
         next: (res: any) => {
+          console.log('🚀 ~ ConversorComponent ~ insertExcell ~ res:', res);
           this.notification.showSuccess('ZPL generated!');
           this.form.patchValue({ zpl: res });
         },
@@ -91,9 +97,7 @@ export class ConversorComponent {
   getLabelPreview() {
     if (!this.form.value) return;
 
-    const opt: labelOptions = {
-      ...this.form.value,
-    };
+    const opt: labelOptions = { ...this.form.value };
 
     this.labelary
       .getLabel(opt)

@@ -6,7 +6,7 @@
       id="file"
       name="file"
       mode="basic"
-      accept=".xls,.xlsx"
+      accept=".xls,.xlsx,.ods"
       chooseIcon="pi pi-upload"
       maxFileSize="1000000"
       chooseLabel="Browse"
@@ -96,6 +96,7 @@
               spinnerMode="horizontal"
               (onInput)="onIndexChange($event)"
               min="0"
+              [max]="maxLabels - 1"
             >
               <ng-template #incrementbuttonicon>
                 <span class="pi pi-plus"></span>

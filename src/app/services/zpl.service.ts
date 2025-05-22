@@ -22,13 +22,13 @@ export class ZplService {
       ^LL354
 
       ^FO0,50
-      ^A0N,60,60
+      ^A0N,40,40
       ^FB1181,1,0,C
       ^FD${data.CLIENTE_PROGETTO}
       ^FS
 
       ^FO0,140
-      ^A0N,50,50
+      ^A0N,70,70
       ^FB1181,1,0,C
       ^FD${data.DESCRIZIONE}
       ^FS
